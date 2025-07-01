@@ -2297,6 +2297,10 @@ def test_hf_gguf_equivalence(tokenizer, gguf_model = "./model-unsloth.F16.gguf")
     pass
     
     for prompt in prompts:
+        if not re.match(r'^[a-zA-Z0-9_\-/\\]+$', gguf_model):
+            raise ValueError("Invalid gguf_model path")
+        if not re.match(r'^[a-zA-Z0-9_\-/\\]+$', prompt):
+            raise ValueError("Invalid prompt")
         command = f"./llama.cpp/llama-cli -m {gguf_model} -n 0 --temp 0.0 --verbose-prompt "\
             f"--check-tensors -p '{prompt}'"
 

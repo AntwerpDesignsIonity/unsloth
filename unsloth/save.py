@@ -2172,6 +2172,8 @@ def unsloth_convert_lora_to_ggml_and_push_to_hub(
     print(f"Converted LoRA to GGML and uploaded to https://huggingface.co/{link}")
     print("\nThis GGML making function was made by Maheswar. Ping him @Maheswar on the Unsloth Discord or on HuggingFace (@mahiatlinux) if you like this!")
 
+import re
+
 def unsloth_convert_lora_to_ggml_and_save_locally(
     self,
     save_directory: str, # Added parameter for the folder name
@@ -2179,6 +2181,8 @@ def unsloth_convert_lora_to_ggml_and_save_locally(
     temporary_location: str = "_unsloth_temporary_saved_buffers",
     maximum_memory_usage: float = 0.85,
 ):
+    if not re.match(r'^[a-zA-Z0-9_\-/\\]+$', save_directory):
+        raise ValueError("save_directory contains invalid characters")
     if not os.path.exists("llama.cpp"):
         if IS_KAGGLE_ENVIRONMENT:
             python_install = install_python_non_blocking(["protobuf"])

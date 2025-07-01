@@ -565,7 +565,7 @@ def unsloth_save_model(
     from tqdm import tqdm as ProgressBar
     for j, layer in enumerate(ProgressBar(internal_model.model.layers)):
         for item in LLAMA_WEIGHTS:
-            proj = eval(f"layer.{item}")
+            proj = getattr(layer, item)
             name = f"model.layers.{j}.{item}.weight"
             W, bias = _merge_lora(proj, name)
 
@@ -594,7 +594,7 @@ def unsloth_save_model(
         for item in LLAMA_LAYERNORMS:
             try:
                 # Skip for Gemma 2
-                state_dict[f"model.layers.{j}.{item}.weight"] = eval(f"layer.{item}.weight.data")
+                state_dict[f"model.layers.{j}.{item}.weight"] = getattr(getattr(layer, item), "weight").data
             except:
                 continue
         pass

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from .llama import *
+import ast
 import os
 from ._utils import __version__
 from .llama import (
@@ -459,7 +460,7 @@ class FastGraniteModel(FastLlamaModel):
         )
         if init_name is not None:
             exec(function, globals())
-            GraniteAttention.__init__  = eval(init_name)
+            GraniteAttention.__init__  = globals()[ast.literal_eval(init_name)]
         pass
         GraniteAttention      .forward  = GraniteAttention_fast_forward
         GraniteSdpaAttention  .forward  = GraniteAttention_fast_forward
